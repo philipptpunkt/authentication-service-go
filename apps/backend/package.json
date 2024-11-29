@@ -1,0 +1,9 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "go build main.go",
+    "dev": "go run main.go"
+  }
+}

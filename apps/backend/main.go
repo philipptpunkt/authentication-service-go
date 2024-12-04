@@ -17,8 +17,10 @@ func main() {
 
 	// Routes and Request Handlers
 	http.HandleFunc("/api/v1/health", v1.HealthHandler)
+
 	http.HandleFunc("/api/v1/auth/register", v1.RegisterHandler)
 	http.HandleFunc("/api/v1/auth/login", v1.LoginHandler)
+	http.HandleFunc("/api/v1/auth/delete", v1.DeleteAccountHandler)
 
 	log.Println("Starting server on :8080...")
 	log.Fatal(http.ListenAndServe(":8080", nil))

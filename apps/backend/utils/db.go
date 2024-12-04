@@ -38,6 +38,7 @@ func ensureTablesExist() {
 		id SERIAL PRIMARY KEY,
 		email TEXT NOT NULL UNIQUE,
 		password TEXT NOT NULL,
+		verified BOOLEAN DEFAULT FALSE,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	);`
 	_, err := db.Exec(createUsersTable)
@@ -61,5 +62,21 @@ func ensureTablesExist() {
 		log.Fatalf("Failed to create refresh_tokens table: %v", err)
 	} else {
 		log.Println("Refresh tokens table ensured")
+	}
+
+	// Ensure email_confirmation_tokens table exists
+	createConfirmationTokensTable := `
+	CREATE TABLE IF NOT EXISTS email_confirmation_tokens (
+		id SERIAL PRIMARY KEY,
+		token TEXT NOT NULL UNIQUE,
+		user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+		expires_at TIMESTAMP NOT NULL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);`
+	_, err = db.Exec(createConfirmationTokensTable)
+	if err != nil {
+		log.Fatalf("Failed to create email_confirmation_tokens table: %v", err)
+	} else {
+		log.Println("Email confirmation tokens table ensured")
 	}
 }

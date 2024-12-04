@@ -47,7 +47,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := utils.GenerateJWT(userID)
+	token, err := utils.GenerateJWT(userID, req.Email)
 	if err != nil {
 		log.Printf("Error generating token: %v\n", err)
 		http.Error(w, "Server error", http.StatusInternalServerError)

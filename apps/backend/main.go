@@ -20,10 +20,11 @@ func main() {
 
 	http.HandleFunc("/api/v1/auth/register", v1.RegisterHandler)
 	http.HandleFunc("/api/v1/auth/login", v1.LoginHandler)
+	http.HandleFunc("/api/v1/auth/refresh", v1.RefreshTokenHandler)
 
 	// Routes with Auth Middleware
 	http.HandleFunc("/api/v1/auth/delete", v1.AuthMiddleware(v1.DeleteAccountHandler))
 
-	log.Println("Starting server on :8080...")
+	log.Println("Starting server on Port 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

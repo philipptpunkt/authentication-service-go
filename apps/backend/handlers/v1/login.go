@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -54,9 +55,28 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Generate a refresh token
+	refreshToken, err := utils.GenerateRefreshToken()
+	if err != nil {
+			log.Printf("Error generating refresh token: %v\n", err)
+			http.Error(w, "Server error", http.StatusInternalServerError)
+			return
+	}
+
+	// Store the refresh token in the database
+	expiresAt := time.Now().Add(7 * 24 * time.Hour) // 7 days valid
+	_, err = db.Exec("INSERT INTO refresh_tokens (token, user_id, expires_at) VALUES ($1, $2, $3)",
+			refreshToken, userID, expiresAt)
+	if err != nil {
+			log.Printf("Error storing refresh token: %v\n", err)
+			http.Error(w, "Server error", http.StatusInternalServerError)
+			return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{
-		"token": token,
-	})
+    "access_token":  token,
+    "refresh_token": refreshToken,
+})
 }

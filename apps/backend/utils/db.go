@@ -32,18 +32,34 @@ func GetDB() *sql.DB {
 }
 
 func ensureTablesExist() {
-	query := `
+	// Ensure users table exists
+	createUsersTable := `
 	CREATE TABLE IF NOT EXISTS users (
 		id SERIAL PRIMARY KEY,
 		email TEXT NOT NULL UNIQUE,
 		password TEXT NOT NULL,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	);`
-
-	_, err := db.Exec(query)
+	_, err := db.Exec(createUsersTable)
 	if err != nil {
 		log.Fatalf("Failed to create users table: %v", err)
 	} else {
 		log.Println("Users table ensured")
+	}
+
+	// Ensure refresh_tokens table exists
+	createRefreshTokensTable := `
+	CREATE TABLE IF NOT EXISTS refresh_tokens (
+		id SERIAL PRIMARY KEY,
+		token TEXT NOT NULL UNIQUE,
+		user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+		expires_at TIMESTAMP NOT NULL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);`
+	_, err = db.Exec(createRefreshTokensTable)
+	if err != nil {
+		log.Fatalf("Failed to create refresh_tokens table: %v", err)
+	} else {
+		log.Println("Refresh tokens table ensured")
 	}
 }

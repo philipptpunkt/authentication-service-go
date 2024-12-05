@@ -5,13 +5,15 @@ import (
 	v1 "backend/handlers/v1"
 	"backend/utils"
 	"log"
+	"net"
 	"net/http"
 
 	"github.com/joho/godotenv"
+	"google.golang.org/grpc"
 )
 
 type authServer struct {
-	auth.UnimplementedAuthServiceServer // Embed for forward compatibility
+	auth.UnimplementedAuthServiceServer
 }
 
 func main() {
@@ -33,22 +35,21 @@ func main() {
 	http.HandleFunc("/api/v1/auth/delete", v1.AuthMiddleware(v1.DeleteAccountHandler))
 	http.HandleFunc("/api/v1/auth/change-password", v1.AuthMiddleware(v1.ChangePasswordHandler))
 
-	// // Set up a TCP listener
-	// listener, err := net.Listen("tcp", ":50051")
-	// if err != nil {
-	// 	log.Fatalf("Failed to listen on port 50051: %v", err)
-	// }
+	// Run gRPC server in a goroutine
+	go func() {
+		listener, err := net.Listen("tcp", ":50051")
+		if err != nil {
+			log.Fatalf("Failed to listen on port 50051: %v", err)
+		}
 
-	// // Create a new gRPC server
-	// grpcServer := grpc.NewServer()
+		grpcServer := grpc.NewServer()
+		auth.RegisterAuthServiceServer(grpcServer, &authServer{})
 
-	// // Register the AuthService with the server
-	// auth.RegisterAuthServiceServer(grpcServer, &authServer{})
-
-	// log.Println("Starting gRPC server on port 50051...")
-	// if err := grpcServer.Serve(listener); err != nil {
-	// 	log.Fatalf("Failed to serve gRPC server: %v", err)
-	// }
+		log.Println("Starting gRPC server on port 50051...")
+		if err := grpcServer.Serve(listener); err != nil {
+			log.Fatalf("Failed to serve gRPC server: %v", err)
+		}
+	}()
 
 	log.Println("Starting server on Port 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

@@ -16,6 +16,14 @@ type TokenSubject struct {
 	Email  string `json:"email"`
 }
 
+func GetJWTSecret() string {
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		panic("JWT_SECRET is not set")
+	}
+	return jwtSecret
+}
+
 func GenerateJWT(userID int, email string) (string, error) {
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
@@ -30,6 +38,19 @@ func GenerateJWT(userID int, email string) (string, error) {
 		"exp": time.Now().Add(time.Hour).Unix(),
 		"iat": time.Now().Unix(),
 	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(jwtSecret))
+}
+
+func GenerateGenericJWT(claims jwt.MapClaims, duration time.Duration) (string, error) {
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		return "", fmt.Errorf("JWT_SECRET is not set")
+	}
+
+	claims["exp"] = time.Now().Add(duration).Unix()
+	claims["iat"] = time.Now().Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(jwtSecret))

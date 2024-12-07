@@ -27,7 +27,6 @@ func RegisterWithLinkHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create user in the database
 	hashedPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
 		log.Printf("Error hashing password: %v\n", err)
@@ -47,7 +46,6 @@ func RegisterWithLinkHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Generate confirmation token
 	confirmationToken, err := utils.GenerateConfirmationToken()
 	if err != nil {
 		log.Printf("Error generating confirmation token: %v\n", err)
@@ -62,24 +60,19 @@ func RegisterWithLinkHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Path to the HTML template
 	templatePath := "./templates/email_address_confirmation.html"
 
-	// Get BASE_URL from environment
 	baseURL := os.Getenv("BASE_URL")
 	if baseURL == "" {
-		baseURL = "http://localhost:8080" // Default to localhost for local testing
+		baseURL = "http://localhost:8080"
 	}
 
-	// Generate the confirmation link
 	confirmationLink := fmt.Sprintf("%s/api/v1/auth/confirm?token=%s", baseURL, confirmationToken)
 
-	// Prepare the email body using the HTML template
 	data := map[string]interface{}{
 		"ConfirmationLink": confirmationLink,
 	}
 
-	// Parse the template
 	emailBody, err := utils.ParseHtmlTemplate(templatePath, data)
 	if err != nil {
 		log.Printf("Error parsing email template: %v\n", err)
@@ -87,7 +80,6 @@ func RegisterWithLinkHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create an email sender
 	emailSender, err := utils.CreateEmailSender()
 	if err != nil {
 		log.Printf("Error initializing email sender: %v\n", err)

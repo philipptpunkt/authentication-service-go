@@ -5,7 +5,42 @@ package auth;
 option go_package = "backend/generated/auth;auth";
 
 service AuthService {
+  rpc RegisterWithLink (RegisterWithLinkRequest) returns (RegisterWithLinkResponse);
+  rpc RegisterWithCode (RegisterWithCodeRequest) returns (RegisterWithCodeResponse);
+  rpc ConfirmEmail (ConfirmEmailRequest) returns (ConfirmEmailResponse);
   rpc Login (LoginRequest) returns (LoginResponse);
+  rpc Logout (LogoutRequest) returns (LogoutResponse);
+  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
+  rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse);
+  rpc ResetPasswordConfirm (ResetPasswordConfirmRequest) returns (ResetPasswordConfirmResponse);
+  rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse);
+  rpc HealthCheck (HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+message RegisterWithLinkRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message RegisterWithLinkResponse {
+  string message = 1;
+}
+
+message RegisterWithCodeRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message RegisterWithCodeResponse {
+  string message = 1;
+}
+
+message ConfirmEmailRequest {
+  string token = 1;
+}
+
+message ConfirmEmailResponse {
+  string message = 1;
 }
 
 message LoginRequest {
@@ -16,4 +51,52 @@ message LoginRequest {
 message LoginResponse {
   string access_token = 1;
   string refresh_token = 2;
+}
+
+message LogoutRequest {}
+
+message LogoutResponse {
+  string message = 1;
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+  string access_token = 1;
+}
+
+message ResetPasswordRequest {
+  string email = 1;
+}
+
+message ResetPasswordResponse {
+  string message = 1;
+}
+
+message ResetPasswordConfirmRequest {
+  string token = 1;
+  string new_password = 2;
+}
+
+message ResetPasswordConfirmResponse {
+  string message = 1;
+}
+
+message ChangePasswordRequest {
+  string current_password = 1;
+  string new_password = 2;
+}
+
+message ChangePasswordResponse {
+  string message = 1;
+}
+
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  string backend = 1;
+  string database = 2;
+  string redis = 3;
 }

@@ -31,7 +31,6 @@ func ConfirmEmailHandler(w http.ResponseWriter, r *http.Request) {
 
 	db := utils.GetDB()
 
-	// Validate the token and fetch the associated user
 	var userID int
 	err := db.QueryRow(`
 		SELECT user_id 
@@ -43,7 +42,6 @@ func ConfirmEmailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Mark the user as verified
 	_, err = db.Exec(`UPDATE users SET verified = TRUE WHERE id = $1`, userID)
 	if err != nil {
 		log.Printf("Error verifying user: %v\n", err)
@@ -51,7 +49,6 @@ func ConfirmEmailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Delete the used token
 	_, err = db.Exec(`DELETE FROM email_confirmation_tokens WHERE token = $1`, req.Token)
 	if err != nil {
 		log.Printf("Error deleting token: %v\n", err)

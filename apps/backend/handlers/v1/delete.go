@@ -7,7 +7,6 @@ import (
 )
 
 func DeleteAccountHandler(w http.ResponseWriter, r *http.Request) {
-	// Retrieve the user info from the context (set by Middleware)
 	subject, ok := r.Context().Value(AuthKey).(utils.TokenSubject)
 	if !ok {
 		http.Error(w, "Failed to retrieve user info from context", http.StatusUnauthorized)

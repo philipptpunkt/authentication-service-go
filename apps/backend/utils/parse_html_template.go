@@ -5,7 +5,6 @@ import (
 	"html/template"
 )
 
-// ParseTemplate loads and populates an HTML template with dynamic data.
 func ParseHtmlTemplate(templatePath string, data map[string]interface{}) (string, error) {
 	tmpl, err := template.ParseFiles(templatePath)
 	if err != nil {

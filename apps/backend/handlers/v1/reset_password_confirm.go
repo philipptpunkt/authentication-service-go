@@ -66,6 +66,14 @@ func ResetPasswordConfirmHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Invalidate refresh tokens
+	_, err = db.Exec("DELETE FROM refresh_tokens WHERE user_id = $1", userID)
+	if err != nil {
+		log.Printf("Failed to invalidate refresh tokens: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
 	// Mark token (jti) as used by deleting it from Redis
 	err = redisClient.Del(utils.GetRedisContext(), jti).Err()
 	if err != nil {

@@ -8,13 +8,11 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-// EmailSender holds the reusable SMTP dialer and sender information.
 type EmailSender struct {
 	Dialer *gomail.Dialer
 	From   string
 }
 
-// NewEmailSender initializes and returns a reusable EmailSender.
 func CreateEmailSender() (*EmailSender, error) {
 	host := os.Getenv("SMTP_HOST")
 	port := os.Getenv("SMTP_PORT")

@@ -1,6 +1,6 @@
-const { resolve } = require("node:path");
+const { resolve } = require("node:path")
 
-const project = resolve(process.cwd(), "tsconfig.json");
+const project = resolve(process.cwd(), "tsconfig.json")
 
 /*
  * This is a custom ESLint configuration for use a library
@@ -12,16 +12,14 @@ const project = resolve(process.cwd(), "tsconfig.json");
  */
 
 module.exports = {
-  extends: [
-    "@vercel/style-guide/eslint/browser",
-    "@vercel/style-guide/eslint/typescript",
-    "@vercel/style-guide/eslint/react",
-  ].map(require.resolve),
-  parserOptions: {
-    project,
-  },
+  extends: ["eslint:recommended", "prettier", "turbo"],
+  plugins: ["only-warn"],
   globals: {
+    React: true,
     JSX: true,
+  },
+  env: {
+    browser: true,
   },
   settings: {
     "import/resolver": {
@@ -46,4 +44,4 @@ module.exports = {
       },
     },
   ],
-};
+}

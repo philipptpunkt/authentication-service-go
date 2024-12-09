@@ -1,5 +1,5 @@
 {
   "extends": "@authentication-service-go/typescript-config/base.json",
-  "include": ["."],
+  "include": ["tailwind.config.ts"],
   "exclude": ["dist", "build", "node_modules"]
 }

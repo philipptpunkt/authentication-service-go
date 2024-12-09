@@ -1,0 +1,6 @@
+{
+  "extends": "@authentication-service-go/typescript-config/react-library.json",
+  "compilerOptions": {},
+  "include": ["."],
+  "exclude": ["node_modules"]
+}

@@ -1,6 +1,6 @@
 import { Card } from "@authentication-service-go/ui/Cards"
 import Link from "next/link"
-import { RegisterForm } from "../../../components/RegisterForm"
+import { RegisterForm } from "../../../../components/RegisterForm"
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 
@@ -20,7 +20,7 @@ export default function RegisterWithLinkPage() {
       )
 
       if (!response.ok) {
-        const { error } = await response.json()
+        const error = await response.text()
         throw new Error(error || "Registration failed")
       }
 
@@ -37,7 +37,7 @@ export default function RegisterWithLinkPage() {
         maxAge: 60, // Token expires in 60 seconds
       })
 
-      redirect("/register/link/success")
+      redirect("/auth/register/link/success")
     }
   }
 

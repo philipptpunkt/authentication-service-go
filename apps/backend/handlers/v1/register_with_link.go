@@ -67,7 +67,7 @@ func RegisterWithLinkHandler(w http.ResponseWriter, r *http.Request) {
 		baseURL = "http://localhost:8080"
 	}
 
-	confirmationLink := fmt.Sprintf("%s/api/v1/auth/confirm?token=%s", baseURL, confirmationToken)
+	confirmationLink := fmt.Sprintf("%s/auth/email-confirmation?token=%s", baseURL, confirmationToken)
 
 	data := map[string]interface{}{
 		"ConfirmationLink": confirmationLink,

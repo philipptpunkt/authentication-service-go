@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { LoginForm } from "../../components/LoginForm"
+import { LoginForm } from "../../../components/LoginForm"
 import { redirect } from "next/navigation"
 import { Card } from "@authentication-service-go/ui/Cards"
 
@@ -19,7 +19,7 @@ export default function LoginPage() {
       )
 
       if (!response.ok) {
-        const { error } = await response.json()
+        const error = await response.text()
         throw new Error(error || "Login failed")
       }
 
@@ -45,14 +45,14 @@ export default function LoginPage() {
       <LoginForm onSubmit={handleLogin} />
       <Link
         className="mt-8 mb-2 block px-8 py-2 w-full text-center cursor-pointer text-lg"
-        href="/reset-password"
+        href="/auth/reset-password"
       >
         Forgot password
       </Link>
       <hr />
       <Link
         className="mt-8 block px-8 py-2 w-full text-center cursor-pointer rounded-md border-2 border-black text-lg"
-        href="/register/link"
+        href="/auth/register/link"
       >
         Create new account
       </Link>
